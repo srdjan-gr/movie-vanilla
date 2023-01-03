@@ -16,6 +16,12 @@ body {
 .logo {
     text-transform: uppercase;
     font-family: 'matrixregular';
+    font-size: 24px;
+    padding: 0;
+}
+
+.logo span{
+    color: rgb(0, 143, 17);
 }
 
 .background {
@@ -27,15 +33,12 @@ body {
     background-size: cover;
 }
 
-.custopOpacity {
-    opacity: .95;
-}
-
-.sirinaKartice {
-    max-width: 19rem;
+.customOpacity {
+    opacity: .96;
 }
 
 .imgHeight {
-    height: 24rem;
-    width: 19rem;
+    height: 400px;
+    /* width: 18rem; */
+    object-fit: cover;
 }

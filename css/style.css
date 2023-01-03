@@ -1,0 +1,48 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+  .background {
+    min-height: 100vh;
+    /* background-image: url('../img/bckgrnd.jpg'), linear-gradient(0deg, #2b5d7e 10%, #416c94cb 60%); */
+    /* background-image: url('../img/bckgrnd.jpg'), linear-gradient(0deg, #2b5d7e 10%, #416c94cb 60%); */
+
+    background-image: url('../img/bckgrnd.jpg');
+    /* background-image: url('../img/bckgrnd.jpg'), linear-gradient(0deg, #6746378e 10%, #67463780 60%); */
+    background-blend-mode: overlay;
+  
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .custopOpacity {
+    opacity: .95;
+  }
+  
+  .sirinaKartice {
+    max-width: 19rem;
+  }
+  
+  .imgHeight {
+    height: 24rem;
+    width: 19rem;
+  }

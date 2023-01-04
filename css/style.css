@@ -38,8 +38,6 @@ body {
     opacity: .96;
 }
 
-.imgHeight {
-    height: 400px;
-    /* width: 18rem; */
-    object-fit: cover;
+.pointer{
+    cursor: pointer;
 }

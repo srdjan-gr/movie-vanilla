@@ -8,6 +8,10 @@ const selectedList = document.querySelector('#selectedList');
 const singleElement = document.querySelector('#singleElement');
 const modalListContent = document.querySelector('#modalListContent');
 const counter = document.querySelector('#counter');
+const toastMessage = document.querySelector('#toastMessage');
+
+
+const alertMessage = document.querySelector('#alertMessage');
 
 
 const key = 'b1c7adef';
@@ -16,7 +20,7 @@ let page = 1;
 let movies = []
 // let movieList = []
 
-let readStorage = JSON.parse(localStorage.getItem('movieList'));
+// let readStorage = JSON.parse(localStorage.getItem('movieList'));
 
 
 // Prikazivanje liste filmova u LS na load stranice
@@ -28,7 +32,7 @@ window.addEventListener('load', () => {
         store = localStorage.setItem('movieList', JSON.stringify(''));
     }
 
-    moviesInList()
+    moviesCounter()
     showMovieList();
 })
 
@@ -89,8 +93,6 @@ const showSearcResault = () => {
 
     movies.forEach((element, idx) => {
 
-        // console.log(element)
-
         resaultContainer.innerHTML += `
             <div class="col d-flex justify-content-center my-3 ">
                 <div class="card text-bg-dark customOpacity " style="width: 19rem;">
@@ -119,17 +121,33 @@ const addToMovieList = (imdbID) => {
 
     const url = `https://www.omdbapi.com/?apikey=${key}&i=${imdbID}`;
 
-    fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
+    try {
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+    
+                let store = JSON.parse(localStorage.getItem('movieList'));
+                // movieList.push(data);
+                store = [...store, data]
+                localStorage.setItem('movieList', JSON.stringify(store));
+    
+                // const toast = new bootstrap.Toast(toastMessage)
+                // toast.show()
 
-            let store = JSON.parse(localStorage.getItem('movieList'));
-            // movieList.push(data);
-            store = [...store, data]
-            localStorage.setItem('movieList', JSON.stringify(store));
+                alertMessage.innerHTML = `
+                    <div class="alert alert-success alert-dismissible fade show mx-2 float" role="alert">
+                        Movie added to list.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `
 
-            showMovieList();
-        })
+                showMovieList();
+    
+            })
+        
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -193,7 +211,7 @@ const showMovieList = () => {
         });
     }
 
-    moviesInList();
+    moviesCounter();
 }
 
 
@@ -210,12 +228,12 @@ const deleteFromMovieList = (idx) => {
     }
 
     showMovieList();
-    moviesInList();
+    moviesCounter();
 }
 
 
-// Movi list brojac
-const moviesInList = () => {
+// Brojac filmova u listi
+const moviesCounter = () => {
     let readStorage = JSON.parse(localStorage.getItem('movieList'));
-    counter.innerHTML = `<h3 class="fs-6 text-white mt-2">${readStorage.length}</h3>`
+    counter.innerHTML = `<h3 class="text-white mt-2">${readStorage.length}</h3>`
 }

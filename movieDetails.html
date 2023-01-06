@@ -30,46 +30,33 @@
                     <span class="text-white-50 ms-4" type="button" data-bs-toggle="modal" data-bs-target="#modalList" id="listBtn"><i class="bi bi-list-check fs-3 pointer"></i></span>
                     <span class="counter d-flex align-items-center justify-content-center" id="counter"></span>
                 </form>
+
             </div>
         </nav>
 
 
-        <!-- Alert message -->
-        <div id="alertMessage" class="fixed-top my-6"></div>
+        <!-- Single movie container -->
+        <section>
+            <article class="single__movie d-flex flex-column flex-md-row text-white">
+                <div class="movie_data">
+                    <h1 class="fs-2">Movie title</h1>
 
+                    <label for="">Year:</label>
+                    <h3>984</h3>
+                </div>
 
-        <!-- Spiner -->
-        <!-- <div class="d-flex justify-content-center h-100">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-        </div> -->
-
-
-        <!-- Toast -->
-        <div class="toast-container position-fixed top-0 end-0 p-3 mt-5">
-            <div id="toastMessage" class="toast text-bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                      Movie added to list.
-                    </div>
-                    <button type="button" class="btn-close me-2 m-auto btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-                  </div>
-            </div>
-          </div>
-          
-
-
-        <!-- Main grid content -->
-        <section class="container d-flex justify-content-start" >
-            <article class="row "  id="resaultContainer" > </article>
+                <div class="movie_poster">
+                    <img src="./img/matrix.jpg" alt="Image title" style="height: 100%;">
+                </div>
+            </article>
         </section>
+
 
         <!-- Selected movie list -->
         <section>
             <article id="selectedList" >
-                  
-                  <div class="modal fade" id="modalList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                    
+                    <div class="modal fade" id="modalList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
                     <div class="modal-dialog m-0">
                         <div class="modal-content">
                             <div class="modal__list">
@@ -81,9 +68,10 @@
                             </div>
                         </div>
                     </div>
-                  </div>
+                    </div>
             </article>
         </section>
+
 
         <!-- Footer -->
         <footer class="card-footer fixed-bottom text-white-50 bg-dark p-3 text-center fs-6'">

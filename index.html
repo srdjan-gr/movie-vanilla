@@ -27,7 +27,7 @@
                         <span class="input-group-text bg-dark border-secondary text-white-50 pointer" id="searchBtn" ><i class="bi bi-search"></i></span>
                         <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Search" aria-label="Search" id="searchInput" aria-describedby="basic-addon1">
                     </div>
-                    <span class="text-white-50 ms-4"><i class="bi bi-list-check fs-3 pointer"></i></span>
+                    <span class="text-white-50 ms-4" type="button" data-bs-toggle="modal" data-bs-target="#modalList" id="listBtn"><i class="bi bi-list-check fs-3 pointer"></i></span>
                 </form>
 
             </div>
@@ -41,7 +41,22 @@
 
         <!-- Selected movie list -->
         <section>
-            <article id="selectedList" ></article>
+            <article id="selectedList" >
+                  
+                  <div class="modal fade" id="modalList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                    <div class="modal-dialog m-0">
+                        <div class="modal-content">
+                            <div class="modal__list">
+                                <button type="button" class="btn bg-dark p-0 float-end" data-bs-dismiss="modal"><i class="bi bi-x-lg text-white-50 "></i></button>
+
+
+                                <div id="modalListContent" class="modal__list-content mt-5"></div>
+    
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+            </article>
         </section>
 
         <!-- Footer -->

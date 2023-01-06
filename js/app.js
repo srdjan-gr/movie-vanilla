@@ -7,17 +7,28 @@ const listBtn = document.querySelector('#listBtn');
 const selectedList = document.querySelector('#selectedList');
 const singleElement = document.querySelector('#singleElement');
 const modalListContent = document.querySelector('#modalListContent');
+const counter = document.querySelector('#counter');
 
 
 const key = 'b1c7adef';
 let page = 1;
 
 let movies = []
-let movieList = []
+// let movieList = []
+
+let readStorage = JSON.parse(localStorage.getItem('movieList'));
 
 
 // Prikazivanje liste filmova u LS na load stranice
 window.addEventListener('load', () => {
+
+    let store = localStorage.getItem('movieList');;
+
+    if (store == null) {
+        store = localStorage.setItem('movieList', JSON.stringify(''));
+    }
+
+    moviesInList()
     showMovieList();
 })
 
@@ -112,10 +123,11 @@ const addToMovieList = (imdbID) => {
         .then((response) => response.json())
         .then((data) => {
 
+            let store = JSON.parse(localStorage.getItem('movieList'));
             // movieList.push(data);
-            movieList = [...movieList, data]
+            store = [...store, data]
+            localStorage.setItem('movieList', JSON.stringify(store));
 
-            localStorage.setItem('movieList', JSON.stringify(movieList));
             showMovieList();
         })
 }
@@ -180,6 +192,8 @@ const showMovieList = () => {
             `
         });
     }
+
+    moviesInList();
 }
 
 
@@ -196,4 +210,12 @@ const deleteFromMovieList = (idx) => {
     }
 
     showMovieList();
+    moviesInList();
+}
+
+
+// Movi list brojac
+const moviesInList = () => {
+    let readStorage = JSON.parse(localStorage.getItem('movieList'));
+    counter.innerHTML = `<h3 class="fs-6 text-white mt-2">${readStorage.length}</h3>`
 }

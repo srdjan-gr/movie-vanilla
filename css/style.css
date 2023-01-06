@@ -53,3 +53,13 @@ body {
     padding: 16px;
     overflow-y: scroll;
 }
+
+.counter {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: rgb(255, 78, 78);
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+}

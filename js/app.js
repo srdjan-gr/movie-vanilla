@@ -9,9 +9,11 @@ const singleElement = document.querySelector('#singleElement');
 const modalListContent = document.querySelector('#modalListContent');
 const counter = document.querySelector('#counter');
 const toastMessage = document.querySelector('#toastMessage');
+const movieDetailView = document.querySelector('#movieDetailView');
 
 
 const alertMessage = document.querySelector('#alertMessage');
+const movieListMessage = document.querySelector('#movieListMessage');
 
 
 const key = 'b1c7adef';
@@ -34,6 +36,7 @@ window.addEventListener('load', () => {
 
     moviesCounter()
     showMovieList();
+    showMovieDetails();
 })
 
 
@@ -105,9 +108,8 @@ const showSearcResault = () => {
                         <li class="list-group-item text-bg-dark fs-6 border-dark text-white-50">Genre: ${element.Type}</li>
                     </ul>
                     <div class="card-body d-flex justify-content-between p-3 px-3 border-dark">
-                        <a href="#" class="card-link text-info fs-6" onclick=detailInfo('${element.imdbID}') >More Info</a>
+                        <a href="#" class="card-link text-info fs-6" onclick=getMovieDetails('${element.imdbID}') >More Info</a>
                         <span class="btn btn-outline-success btn-sm" onclick=addToMovieList('${element.imdbID}') >Add to list</span>
-
                     </div>
                 </div>
             </div>
@@ -135,7 +137,7 @@ const addToMovieList = (imdbID) => {
                 // toast.show()
 
                 alertMessage.innerHTML = `
-                    <div class="alert alert-success alert-dismissible fade show mx-2 float" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3" role="alert">
                         Movie added to list.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -204,7 +206,7 @@ const showMovieList = () => {
                     </div>
 
                     <span class="text-danger me-2" type="button" onclick=deleteFromMovieList(${idx})><i class="bi bi-trash3 fs-5 pointer"></i></span>
-                    <span class="text-success" type="button"><i class="bi bi-eye fs-5 pointer"></i></span>
+                    <span class="text-success" type="button" onclick=getMovieDetails('${element.imdbID}')><i class="bi bi-eye fs-5 pointer"></i></span>
                 </div>
                 <hr class="text-bg-dark mb-4">
             `
@@ -225,12 +227,111 @@ const deleteFromMovieList = (idx) => {
         store.splice(idx, 1);
 
         localStorage.setItem('movieList', JSON.stringify(store));
+
+        movieListMessage.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show mx-2 float" role="alert">
+            Movie delleted from the list.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `
     }
 
     showMovieList();
     moviesCounter();
 }
 
+
+const getMovieDetails = (imdbID) => {
+
+    localStorage.removeItem('movieDetails');
+
+    const url = `https://www.omdbapi.com/?apikey=${key}&i=${imdbID}`;
+    
+    try {
+        fetch(url)
+        .then((response) => response.json())
+        .then((data) =>  localStorage.setItem('movieDetails', JSON.stringify(data)))
+        .then((_) => {
+
+            window.location = 'movieDetails.html'
+        });
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const showMovieDetails = () => {
+
+    const storageMovie = JSON.parse(localStorage.getItem('movieDetails'));
+        
+        movieDetailView.innerHTML = `
+                        
+            <article class="single__movie d-flex flex-column flex-md-row text-white container my-3">
+        
+                <table class="table table-borderless w-75">
+                    <thead>
+                        <tr>
+                            <td colspan="6"><h1 class="fs-3 mb-3 text-white">${storageMovie.Title}</h1></td>
+                        </tr>
+                    </thead>
+        
+                    <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Release date:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Released}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Director:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Director}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Writer:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Writer}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Genre:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Genre}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Type:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Type}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Actors:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Actors}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Synopsis:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Plot}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">IMDB rating:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.imdbRating}</h3></td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Money earned:</label></th>
+                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.BoxOffice}</h3></td>
+                </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="movie_poster d-flex align-items-center">
+                    <img src=${storageMovie.Poster} alt=${storageMovie.Title} >
+                </div>
+        
+            </article>
+        `
+}
 
 // Brojac filmova u listi
 const moviesCounter = () => {

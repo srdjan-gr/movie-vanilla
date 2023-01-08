@@ -15,6 +15,7 @@ body {
 
 .my-6{
     margin: 60px 0;
+    /* z-index: 10000; */
 }
 
 .logo {
@@ -74,10 +75,10 @@ body {
 }
 
 .single__movie{
-    background-color: rgba(33, 37, 41, 0.8);
-    width: calc(100% - 40px);
-    min-height: 550px;
-    margin: 0 20px;
+    background-color: rgba(33, 37, 41, 0.85);
+    /* width: calc(100% - 40px); */
+    /* min-height: 550px; */
+    /* margin: 0 20px; */
     padding: 10px;
     border-radius: 5px;
 }

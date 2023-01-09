@@ -385,7 +385,7 @@ const pagination = () => {
             <li class="page-item active" ><span class="page-link bg-success border-secondary">${page}</span></li>
             <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">${nextPage}</span></li>
             <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">...</span></li>
-            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">${totalResults / 10}</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">${Math.floor(totalResults / 10)}</span></li>
 
             <li class="page-item">
                 <a class="page-link bg-dark text-white-50 border-secondary" href="#" aria-label="Next" onclick=goToNextPage()>
@@ -402,7 +402,7 @@ const pagination = () => {
 const goToNextPage = async () => {
     resaultContainer.innerHTML = '';
 
-    if(nextPage <= totalResults){
+    if(nextPage <= x){
 
         page = page + 1;
     
@@ -412,7 +412,6 @@ const goToNextPage = async () => {
     }else{
         fetchData();  
     }
-
 }
 
 

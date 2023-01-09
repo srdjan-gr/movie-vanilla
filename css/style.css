@@ -36,6 +36,10 @@ body {
     color: rgb(0, 143, 17);
 }
 
+#logoMobile{
+    display: none;
+}
+
 .background {
     min-height: 100vh;
     background-image: url('../img/bckgrnd.jpg');
@@ -81,4 +85,15 @@ body {
 
 .single__movie th {
     width: 240px;
+}
+
+
+@media (max-width: 768px){
+    #logoMobile{
+        display: block;
+    }
+
+    #logo{
+        display: none;
+    }
 }

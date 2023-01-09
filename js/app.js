@@ -190,7 +190,6 @@ const addMovieToList = (imdbID) => {
 }
 
 
-
 // Prikaz liste sa dodatim filmovima
 const showMovieList = () => {
 

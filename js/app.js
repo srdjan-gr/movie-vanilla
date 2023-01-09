@@ -11,16 +11,18 @@ const counter = document.querySelector('#counter');
 const toastMessage = document.querySelector('#toastMessage');
 const movieDetailView = document.querySelector('#movieDetailView');
 
-
 const alertMessage = document.querySelector('#alertMessage');
 const movieListMessage = document.querySelector('#movieListMessage');
+const searchPagination = document.querySelector('#searchPagination');
+const spinerContainer = document.querySelector('#spinerContainer');
 
 
 const key = 'b1c7adef';
 let page = 1;
 
-let movies = []
-// let movieList = []
+// Moguci odgovori sa API-ja
+let movies = [];
+let totalResults = 0;
 
 // let readStorage = JSON.parse(localStorage.getItem('movieList'));
 
@@ -43,10 +45,31 @@ window.addEventListener('load', () => {
 // Pretraga na klik Search dugmeta
 searchBtn.addEventListener('click', async () => {
 
+    // spiner = showSpiner();
+
     // searchInput.value = '';
     resaultContainer.innerHTML = '';
 
-    // const url = `https://www.omdbapi.com/?apikey=${keys.key}&s=${searchInput.value}&page=${page}`;
+    
+    if(searchInput.value != ''){
+        fetchData();
+    }else{
+        alertMessage.innerHTML = `
+            <div class="alert alert-info alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                Search field is empty! Enter movie name for search.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `
+        setTimeout(() => {
+            alertMessage.innerHTML = '';
+        }, "1500") 
+    }
+})
+
+
+// Fetch podataka sa API-ja
+const fetchData = async () => {
+
     const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
 
     try {
@@ -54,41 +77,53 @@ searchBtn.addEventListener('click', async () => {
             .then((response) => response.json())
             .then((data) => {
 
-                movies = data.Search
-                showSearcResault()
-            });
+                // response = data.Response
 
-    } catch (error) {
-        console.log(error);
-    }
-})
+                
+                movies = data.Search
+                totalResults = data.totalResults
+                res = data.Response
+
+                // if(data.Response == 'true'){
+                //     showSpiner();
+                // }
+                showSearcResault()
+                pagination(totalResults);
+            });
+            
+        } catch (error) {
+            console.log(error);
+        }
+}
 
 
 // Pretraga na Enter dugme
-// searchInput.addEventListener('keypress', async (e) => {
+searchInput.addEventListener('keypress', async (e) => {
 
-//     if(e.key === 'Enter'){
-//         searchInput.value = '';
-//         resaultContainer.innerHTML = '';
-    
-//         const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
-    
-//         try {
-//             await fetch(url)
-//                 .then((response) => response.json())
-//                 .then((data) => {
-    
-//                     movies = data.Search
+    // searchInput.value = '';
+    resaultContainer.innerHTML = '';
 
-//                     showSearcResault()
-//                 });
+    if(e.key === 'Enter'){
+        searchInput.value = '';
+        resaultContainer.innerHTML = '';
     
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
-// })
+        const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
+    
+        try {
+            await fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+    
+                    movies = data.Search
 
+                    showSearcResault()
+                });
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
+})
 
 
 // Prikazivanje rezultata pretrage 
@@ -109,17 +144,18 @@ const showSearcResault = () => {
                     </ul>
                     <div class="card-body d-flex justify-content-between p-3 px-3 border-dark">
                         <a href="#" class="card-link text-info fs-6" onclick=getMovieDetails('${element.imdbID}') >More Info</a>
-                        <span class="btn btn-outline-success btn-sm" onclick=addToMovieList('${element.imdbID}') >Add to list</span>
+                        <span class="btn btn-outline-success btn-sm" onclick=addMovieToList('${element.imdbID}') >Add to list</span>
                     </div>
                 </div>
             </div>
         `;
     })
+    
 };
 
 
 // Dodavanje filmova po IMDBID u LocalStorage za koriscenje u Listi Odabranih filmova
-const addToMovieList = (imdbID) => {
+const addMovieToList = (imdbID) => {
 
     const url = `https://www.omdbapi.com/?apikey=${key}&i=${imdbID}`;
 
@@ -132,42 +168,24 @@ const addToMovieList = (imdbID) => {
                 // movieList.push(data);
                 store = [...store, data]
                 localStorage.setItem('movieList', JSON.stringify(store));
-    
-                // const toast = new bootstrap.Toast(toastMessage)
-                // toast.show()
 
                 alertMessage.innerHTML = `
-                    <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
                         Movie added to list.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 `
-
+                setTimeout(() => {
+                    alertMessage.innerHTML = '';
+                }, "1500")
+                  
                 showMovieList();
-    
             })
         
     } catch (error) {
         console.log(error)
     }
 }
-
-
-// Detaljne onformacije o filmu sa slanje zahteva sa IMDBID 
-// const detailInfo = async (imdbID)  => {
-
-//     const url = `https://www.omdbapi.com/?apikey=${key}&i=${imdbID}`;
-
-//     fetch(url)
-//         .then((response) => response.json())
-//         .then((data) => {
-
-//             console.log(data)
-//         });
-
-// }
-
-
 
 
 
@@ -229,11 +247,15 @@ const deleteFromMovieList = (idx) => {
         localStorage.setItem('movieList', JSON.stringify(store));
 
         movieListMessage.innerHTML = `
-        <div class="alert alert-danger alert-dismissible fade show mx-2 float" role="alert">
-            Movie delleted from the list.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `
+            <div class="alert alert-danger alert-dismissible fade show w-75 m-0 text-center px-2" role="alert">
+                Movie delleted from the list.
+            </div>
+        `
+
+        setTimeout(() => {
+            movieListMessage.innerHTML = '';
+        }, "1500")
+          
     }
 
     showMovieList();
@@ -241,6 +263,7 @@ const deleteFromMovieList = (idx) => {
 }
 
 
+// Fetch detalje filma sa API uz pomoc IMCBID filma
 const getMovieDetails = (imdbID) => {
 
     localStorage.removeItem('movieDetails');
@@ -253,7 +276,7 @@ const getMovieDetails = (imdbID) => {
         .then((data) =>  localStorage.setItem('movieDetails', JSON.stringify(data)))
         .then((_) => {
 
-            window.location = 'movieDetails.html'
+            window.location = `movieDetails.html?id=${imdbID}`;
         });
         
     } catch (error) {
@@ -262,6 +285,7 @@ const getMovieDetails = (imdbID) => {
 }
 
 
+// Prikazivanje svih detalja fetchovanog filma na stranici MovieDetails
 const showMovieDetails = () => {
 
     const storageMovie = JSON.parse(localStorage.getItem('movieDetails'));
@@ -270,71 +294,127 @@ const showMovieDetails = () => {
                         
             <article class="single__movie d-flex flex-column flex-md-row text-white container my-3">
         
-                <table class="table table-borderless w-75">
+                <table class="table table-borderless w-md-75">
                     <thead>
                         <tr>
-                            <td colspan="6"><h1 class="fs-3 mb-3 text-white">${storageMovie.Title}</h1></td>
+                            <th colspan="6"><h1 class="fs-3 mb-3 text-white">${storageMovie.Title}</h1></th>
                         </tr>
                     </thead>
         
                     <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Release date:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Released}</h3></td>
-                </tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Release date:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Released}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Director:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Director}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Director:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Director}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Writer:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Writer}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Writer:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Writer}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Genre:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Genre}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Genre:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Genre}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Type:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Type}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Type:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Type}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Actors:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Actors}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Actors:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Actors}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Synopsis:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.Plot}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Synopsis:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.Plot}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">IMDB rating:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.imdbRating}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">IMDB rating:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.imdbRating}</h3></td>
+                    </tr>
 
-                <tr>
-                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Money earned:</label></th>
-                    <td><h3 class="m-0 fs-5 text-white">${storageMovie.BoxOffice}</h3></td>
-                </tr>
+                    <tr>
+                        <th scope="row" colspan="2"> <label for="" class="text-white-50">Money earned:</label></th>
+                        <td><h3 class="m-0 fs-5 text-white">${storageMovie.BoxOffice}</h3></td>
+                    </tr>
 
+                    <tr>
+                    </tr>
+                    
                     </tbody>
                 </table>
-
-                <div class="movie_poster d-flex align-items-center">
-                    <img src=${storageMovie.Poster} alt=${storageMovie.Title} >
+                    
+                <div class="movie_poster d-flex align-items-start justify-content-between flex-column">
+                    <img src=${storageMovie.Poster} alt=${storageMovie.Title} style="height: 90%;">
+                    <span class="btn btn-outline-success btn-sm mt-3" onclick=addMovieToList('${storageMovie.imdbID}') >Add to list</span>
                 </div>
-        
+
             </article>
         `
 }
 
+
 // Brojac filmova u listi
 const moviesCounter = () => {
     let readStorage = JSON.parse(localStorage.getItem('movieList'));
-    counter.innerHTML = `<h3 class="text-white mt-2">${readStorage.length}</h3>`
+    counter.innerHTML = `<h3 class="text-white m-0">${readStorage.length}</h3>`
 }
+
+
+// Pagionation
+const pagination = () => {
+
+    searchPagination.innerHTML = `
+    
+        <ul class="pagination">
+
+            <li class="page-item ">
+                <a class="page-link bg-dark text-white-50 border-dark" href="#" aria-label="Previous"  onclick=previousPage()>
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item " ><span class="page-link bg-dark border-dark text-white-50">1</span></li>
+            <li class="page-item active" ><span class="page-link bg-success border-success">${page}</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-dark text-white-50">3</span></li>
+
+            <li class="page-item">
+                <a class="page-link bg-dark text-white-50 border-dark" href="#" aria-label="Next" onclick=nextPage()>
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            
+        </ul>
+    `
+}
+
+
+// Pagination - klik na dugme Next Page
+const nextPage = async () => {
+    resaultContainer.innerHTML = '';
+
+    page = page + 1;
+
+    fetchData();
+}
+
+
+// Pagination - klik na dugme Previous Page
+const previousPage = async () => {
+    resaultContainer.innerHTML = '';
+
+    page = page - 1;
+
+    fetchData();
+}
+
+
+

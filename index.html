@@ -25,9 +25,10 @@
                 <form class="container-fluid m-0 d-flex w-50">
                     <div class="input-group d-flex justify-content-end">
                         <span class="input-group-text bg-dark border-secondary text-white-50 pointer" id="searchBtn" ><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Search" aria-label="Search" id="searchInput" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Search..." aria-label="Search" id="searchInput" aria-describedby="basic-addon1" >
                     </div>
-                    <span class="text-white-50 ms-4" type="button" data-bs-toggle="modal" data-bs-target="#modalList" id="listBtn"><i class="bi bi-list-check fs-3 pointer"></i></span>
+
+                    <span class="text-white-50 ms-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i class="bi bi-list-check fs-3 pointer" ></i></span>
                     <span class="counter d-flex align-items-center justify-content-center" id="counter"></span>
                 </form>
             </div>
@@ -39,95 +40,31 @@
 
 
         <!-- Spiner -->
-        <!-- <div class="d-flex justify-content-center h-100">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-        </div> -->
+        <div id="spinerContainer"  ></div>
 
           
         <!-- Main grid content -->
         <section class="container d-flex justify-content-start" >
             <article class="row "  id="resaultContainer" > </article>
         </section>
-<!-- 
-        <section id="movieDetailView" class="w-100 d-flex align-items-center justify-content-between">
-                            <tbody>
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Release date:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Released}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Director:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Director}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Writer:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Writer}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Genre:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Genre}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Type:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Type}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Actors:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Actors}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Synopsis:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.Plot}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">IMDB rating:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.imdbRating}</h3></td>
-                                </tr>
-                
-                                <tr>
-                                    <th scope="row" colspan="2"> <label for="" class="text-white-50 me-3">Money earned:</label></th>
-                                    <td><h3 class="m-0 fs-5 text-white">${data.BoxOffice}</h3></td>
-                                </tr>
-            
-                            </tbody>
-                        </table>
-            
-                        <div class="movie_poster w-25">
-                            <img src=${data.Poster} alt=${data.Title} style="height: 100%;">
-                        </div>
-        </section> -->
 
 
         <!-- Selected movie list -->
-        <section>
-            <article id="selectedList" >
-                  
-                  <div class="modal fade" id="modalList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-                    <div class="modal-dialog m-0">
-                        <div class="modal-content">
-                            <div class="modal__list">
-
-                                <div class="list__header d-flex justify-content-between align-items-center" style="height: 60px;">
-                                    <div id="movieListMessage" class="d-flex align-items-center mt-3" ></div>
-                                    <button type="button" class="btn bg-dark p-0 float-end" data-bs-dismiss="modal"><i class="bi bi-x-lg text-white-50 "></i></button>
-                                </div>
-
-                                <div id="modalListContent" class="modal__list-content mt-4"></div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </article>
+        <section class="offcanvas offcanvas-end bg-dark text-white-50" style="width: 420px;" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header d-flex justify-content-between align-items-center px-3" style="height: 60px;" >
+                <div id="movieListMessage" class="d-flex align-items-start mt-3 w-100" ></div>
+                <button type="button" class="btn bg-dark p-0 float-end" data-bs-dismiss="offcanvas" ><i class="bi bi-x-lg text-white-50 "></i></button>
+            </div>
+            <div class="offcanvas-body">
+              <div>
+                <div id="modalListContent" ></div> 
+              </div>
+            </div>
         </section>
+
+
+        <!-- Pagination -->
+        <nav aria-label="Search results pages" class=" fixed-bottom mb-5 d-flex justify-content-center" id="searchPagination"></nav>
 
 
         <!-- Footer -->

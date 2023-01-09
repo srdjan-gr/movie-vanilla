@@ -19,6 +19,8 @@ const spinerContainer = document.querySelector('#spinerContainer');
 
 const key = 'b1c7adef';
 let page = 1;
+let prevPage = 0;
+let nextPage = 2;
 
 // Moguci odgovori sa API-ja
 let movies = [];
@@ -77,9 +79,6 @@ const fetchData = async () => {
             .then((response) => response.json())
             .then((data) => {
 
-                // response = data.Response
-
-                
                 movies = data.Search
                 totalResults = data.totalResults
                 res = data.Response
@@ -88,7 +87,7 @@ const fetchData = async () => {
                 //     showSpiner();
                 // }
                 showSearcResault()
-                pagination(totalResults);
+                pagination();
             });
             
         } catch (error) {
@@ -374,20 +373,22 @@ const pagination = () => {
 
     searchPagination.innerHTML = `
     
-        <ul class="pagination">
+        <ul class="pagination m-0 border-success">
 
             <li class="page-item ">
-                <a class="page-link bg-dark text-white-50 border-dark" href="#" aria-label="Previous"  onclick=previousPage()>
+                <a class="page-link bg-dark text-white-50 border-secondary" href="#" aria-label="Previous"  onclick=goToPreviousPage()>
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
-            <li class="page-item " ><span class="page-link bg-dark border-dark text-white-50">1</span></li>
-            <li class="page-item active" ><span class="page-link bg-success border-success">${page}</span></li>
-            <li class="page-item " ><span class="page-link bg-dark border-dark text-white-50">3</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50 ">${prevPage}</span></li>
+            <li class="page-item active" ><span class="page-link bg-success border-secondary">${page}</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">${nextPage}</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">...</span></li>
+            <li class="page-item " ><span class="page-link bg-dark border-secondary text-white-50">${totalResults}</span></li>
 
             <li class="page-item">
-                <a class="page-link bg-dark text-white-50 border-dark" href="#" aria-label="Next" onclick=nextPage()>
+                <a class="page-link bg-dark text-white-50 border-secondary" href="#" aria-label="Next" onclick=goToNextPage()>
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -398,22 +399,38 @@ const pagination = () => {
 
 
 // Pagination - klik na dugme Next Page
-const nextPage = async () => {
+const goToNextPage = async () => {
     resaultContainer.innerHTML = '';
 
-    page = page + 1;
+    if(nextPage <= totalResults){
 
-    fetchData();
+        page = page + 1;
+    
+        prevPage = page - 1;
+        nextPage = page + 1;
+        fetchData();
+    }else{
+        fetchData();  
+    }
+
 }
 
 
 // Pagination - klik na dugme Previous Page
-const previousPage = async () => {
+const goToPreviousPage = async () => {
     resaultContainer.innerHTML = '';
 
-    page = page - 1;
+    if(prevPage != 0){
 
-    fetchData();
+        page = page - 1;
+    
+        prevPage = page - 1;
+        nextPage = page + 1;
+    
+        fetchData();
+    }else{
+        fetchData();
+    }
 }
 
 

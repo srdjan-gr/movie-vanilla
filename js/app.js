@@ -69,33 +69,6 @@ searchBtn.addEventListener('click', async () => {
 })
 
 
-// Fetch podataka sa API-ja
-const fetchData = async () => {
-
-    const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
-
-    try {
-        await fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-
-                movies = data.Search
-                totalResults = data.totalResults
-                res = data.Response
-
-                // if(data.Response == 'true'){
-                //     showSpiner();
-                // }
-                showSearcResault()
-                pagination();
-            });
-            
-        } catch (error) {
-            console.log(error);
-        }
-}
-
-
 // Pretraga na Enter dugme
 searchInput.addEventListener('keypress', async (e) => {
 
@@ -125,6 +98,33 @@ searchInput.addEventListener('keypress', async (e) => {
 })
 
 
+// Fetch podataka sa API-ja
+const fetchData = async () => {
+
+    const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
+
+    try {
+        await fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+
+                movies = data.Search
+                totalResults = data.totalResults
+                res = data.Response
+
+                // if(data.Response == 'true'){
+                //     showSpiner();
+                // }
+                showSearcResault()
+                pagination();
+            });
+            
+        } catch (error) {
+            console.log(error);
+        }
+}
+
+
 // Prikazivanje rezultata pretrage 
 const showSearcResault = () => {
 
@@ -135,7 +135,7 @@ const showSearcResault = () => {
                 <div class="card text-bg-dark customOpacity " style="width: 19rem;">
                     <img src=${element.Poster} class="card-img-top imgHeight" alt="..." style="height: 22rem; object-fit: cover; "/>
                     <div class="card-body py-2">
-                        <h5 class="card-title m-0 text-white-50" >${element.Title}</h5>
+                        <h5 class="card-title m-0 mt-2 text-white" >${element.Title}</h5>
                     </div>
                     <ul class="list-group list-group-flush border-dark" >
                         <li class="list-group-item text-bg-dark fs-6 border-dark text-white-50">Year: ${element.Year}</li>

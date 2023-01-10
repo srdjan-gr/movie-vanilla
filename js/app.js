@@ -75,6 +75,8 @@ searchBtn.addEventListener('click', async () => {
 // Pretraga na Enter dugme
 searchInput.addEventListener('keypress', async (e) => {
 
+    e.preventDefault();
+
     // searchInput.value = '';
     resaultContainer.innerHTML = '';
 

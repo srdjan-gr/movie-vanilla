@@ -78,26 +78,27 @@ searchInput.addEventListener('keypress', async (e) => {
     // searchInput.value = '';
     resaultContainer.innerHTML = '';
 
-    if(e.key === 'Enter'){
-        searchInput.value = '';
-        resaultContainer.innerHTML = '';
-    
-        const url = `https://www.omdbapi.com/?apikey=${key}&s=${searchInput.value}&page=${page}`;
-    
-        try {
-            await fetch(url)
-                .then((response) => response.json())
-                .then((data) => {
-    
-                    movies = data.Search
 
-                    showSearcResault()
-                });
-    
-        } catch (error) {
-            console.log(error);
+    if(e.key == 'Enter'){
+
+        if(searchInput.value != ''){
+            
+            resaultContainer.innerHTML = '';
+        
+            fetchData();
+        }else{
+            alertMessage.innerHTML = `
+                <div class="alert alert-info alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                    Search field is empty! Enter movie name for search.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `
+            setTimeout(() => {
+                alertMessage.innerHTML = '';
+            }, "1500") 
         }
     }
+
 })
 
 
@@ -165,23 +166,43 @@ const addMovieToList = (imdbID) => {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
-    
-                let store = JSON.parse(localStorage.getItem('movieList'));
-                // movieList.push(data);
-                store = [...store, data]
-                localStorage.setItem('movieList', JSON.stringify(store));
 
-                alertMessage.innerHTML = `
-                    <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
-                        Movie added to list.
+                let store = JSON.parse(localStorage.getItem('movieList'));
+
+                store.forEach(element => {
+                    
+                    if(imdbID == element.imdbID ){
+    
+                        alertMessage.innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                        Selected movie is already in the list!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                `
-                setTimeout(() => {
-                    alertMessage.innerHTML = '';
-                }, "1500")
-                  
-                showMovieList();
+                        </div>
+                        `
+                        
+                        setTimeout(() => {
+                            alertMessage.innerHTML = '';
+                        }, "1500")
+
+                    }else{
+                        // movieList.push(data);
+                        store = [...store, data]
+                        localStorage.setItem('movieList', JSON.stringify(store));
+        
+                        alertMessage.innerHTML = `
+                            <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                                Movie added to list.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `
+                        setTimeout(() => {
+                            alertMessage.innerHTML = '';
+                        }, "1500")
+                          
+                        showMovieList();
+                    }
+                });
+
             })
         
     } catch (error) {
@@ -410,6 +431,17 @@ const goToNextPage = async () => {
         nextPage = page + 1;
         
         fetchData();
+
+        // alertMessage.innerHTML = `
+        //     <div class="alert alert-danger alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+        //         You have reached the last page!!!
+        //         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        //     </div>
+        // `
+
+        // setTimeout(() => {
+        //     alertMessage.innerHTML = '';
+        // }, 
     
 }
 
@@ -428,6 +460,16 @@ const goToPreviousPage = async () => {
         fetchData();
     }else{
         fetchData();
+        alertMessage.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                These is first page!!!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `
+
+        setTimeout(() => {
+            alertMessage.innerHTML = '';
+        }, "1500")
     }
 }
 

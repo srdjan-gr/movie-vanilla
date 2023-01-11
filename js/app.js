@@ -171,39 +171,23 @@ const addMovieToList = (imdbID) => {
 
                 let store = JSON.parse(localStorage.getItem('movieList'));
 
-                store.forEach(element => {
-                    
-                    if(imdbID == element.imdbID ){
-    
-                        alertMessage.innerHTML = `
-                        <div class="alert alert-danger alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
-                        Selected movie is already in the list!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `
-                        
-                        setTimeout(() => {
-                            alertMessage.innerHTML = '';
-                        }, "1500")
 
-                    }else{
-                        // movieList.push(data);
-                        store = [...store, data]
-                        localStorage.setItem('movieList', JSON.stringify(store));
-        
-                        alertMessage.innerHTML = `
-                            <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
-                                Movie added to list.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        `
-                        setTimeout(() => {
-                            alertMessage.innerHTML = '';
-                        }, "1500")
-                          
-                        showMovieList();
-                    }
-                });
+                // movieList.push(data);
+                store = [...store, data]
+                localStorage.setItem('movieList', JSON.stringify(store));
+
+                alertMessage.innerHTML = `
+                    <div class="alert alert-success alert-dismissible fade show mx-2 float my-6 z-3 text-center" role="alert">
+                        Movie added to list.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `
+                setTimeout(() => {
+                    alertMessage.innerHTML = '';
+                }, "1500")
+                    
+                showMovieList();
+
 
             })
         
@@ -379,6 +363,7 @@ const showMovieDetails = () => {
                 <div class="movie_poster d-flex align-items-start justify-content-between flex-column">
                     <img src=${storageMovie.Poster} alt=${storageMovie.Title} style="height: 90%;">
                     <span class="btn btn-outline-success btn-sm mt-3" onclick=addMovieToList('${storageMovie.imdbID}') >Add to list</span>
+                    <a class="btn btn-outline-info btn-sm mt-3" href="index.html">Back to search</a>
                 </div>
 
             </article>
